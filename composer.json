@@ -1,0 +1,43 @@
+{
+	"name": "serieseight/craft-iubenda",
+	"description": "Iubenda consent integration for Craft CMS",
+	"type": "craft-plugin",
+	"license": "mit",
+  "authors": [{
+		"name": "Series Eight",
+		"homepage": "https://serieseight.com"
+	}],
+	"support": {
+		"email": "info@serieseight.com",
+		"issues": "https://github.com/serieseight/craft-iubenda/issues?state=open",
+		"source": "https://github.com/serieseight/craft-iubenda",
+		"docs": "https://github.com/serieseight/craft-iubenda",
+		"rss": "https://github.com/serieseight/craft-iubenda/releases.atom"
+	},
+	"require": {
+		"php": ">=8.0.2",
+		"craftcms/cms": "^4.3.6.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"serieseight\\craftiubenda\\": "src/"
+		}
+	},
+	"extra": {
+		"handle": "series-eight-iubenda",
+		"name": "Iubenda Consent",
+		"developer": "Series Eight",
+		"documentationUrl": "https://github.com/serieseight/craft-iubenda",
+		"class": "serieseight\\craftiubenda\\Iubenda"
+	},
+	"config": {
+		"sort-packages": true,
+		"platform": {
+			"php": "8.0.2"
+		},
+		"allow-plugins": {
+			"yiisoft/yii2-composer": true,
+			"craftcms/plugin-installer": true
+		}
+	}
+}

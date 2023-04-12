@@ -1,0 +1,63 @@
+{% import '_includes/forms.twig' as forms %}
+
+{{ forms.lightswitchField({
+	first: true,
+	label: 'Stateless',
+	instructions: 'If you use caching or a CDN, enable this to run Iubenda regardless of cookies and user agent',
+	id: 'stateless',
+	name: 'stateless',
+	on: (settings.stateless is defined) ? settings.stateless : ""
+}) }}
+
+{% set purposes = {
+	1: 'Strictly necessary',
+	2: 'Basic functionality',
+	3: 'Experience enhancement',
+	4: 'Analytics',
+	5: 'Targeting & Advertising'
+} %}
+
+{{ forms.editableTableField({
+	label: 'Additional scripts',
+	instructions: 'Any additional scripts to include in prior blocking. Any script that includes the content in the src attribute or inline will be blocked',
+	name: 'scripts',
+	allowAdd: true,
+	allowDelete: true,
+	allowReorder: true,
+	rows: settings.scripts,
+	cols: [
+		{
+			type: 'select',
+			heading: 'Purpose',
+			options: purposes
+		},
+		{
+			type: 'singleline',
+			heading: 'Content',
+			width: '100%'
+		}
+	]
+}) }}
+
+
+{{ forms.editableTableField({
+	label: 'Additional iframes',
+	instructions: 'Any additional iframes to include in prior blocking. Any iframe that includes the content in the src or srcdoc attributes will be blocked',
+	name: 'iframes',
+	allowAdd: true,
+	allowDelete: true,
+	allowReorder: true,
+	rows: settings.iframes,
+	cols: [
+		{
+			type: 'select',
+			heading: 'Purpose',
+			options: purposes
+		},
+		{
+			type: 'singleline',
+			heading: 'Content',
+			width: '100%'
+		}
+	]
+}) }}
