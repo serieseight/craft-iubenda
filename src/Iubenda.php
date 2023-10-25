@@ -41,9 +41,10 @@ class Iubenda extends Plugin
 		if (Craft::$app->getRequest()->getIsCpRequest()) return;
 
 		// replace page output with version processed by Iubenda
+		// Using EVENT_AFTER_RENDER_PAGE_TEMPLATE so hooks etc have been injected
 		Event::on(
 			View::class,
-			View::EVENT_AFTER_RENDER_TEMPLATE,
+			View::EVENT_AFTER_RENDER_PAGE_TEMPLATE,
 			function (TemplateEvent $event) {
 				$event->output = $this->iubenda_replace($event->output);
 			}
@@ -78,6 +79,12 @@ class Iubenda extends Plugin
 			return $html;
 		}
 
+		// Replace Alpine shorthand syntax (@a) with x-on (keeping whitespace/br etc and quotes)
+		// With value
+		$html = preg_replace('/([\n\r\s]+)@([\w.]+)=(["\'])((?:.(?!["\']?\s+(?:\S+)=|\s*\/?[>"\']))+.)(["\'])/i', '$1x-on:$2=$3$4$5', $html);
+		// Without value
+		$html = preg_replace('/([\n\r\s]+)@([\w.]+)/i', '$1x-on:$2', $html);
+
 		// run Iubenda on the provided html
 		$iubenda = new \iubendaParser($html, [
 			'type' => 'faster',
@@ -89,6 +96,7 @@ class Iubenda extends Plugin
 			]),
 			'iframes' => self::reformat_settings($this->settings->iframes)
 		]);
+
 		$html = $iubenda->parse();
 
 		return $html;
