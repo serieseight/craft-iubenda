@@ -79,11 +79,14 @@ class Iubenda extends Plugin
 			return $html;
 		}
 
-		// Replace Alpine shorthand syntax (@a) with x-on (keeping whitespace/br etc and quotes)
-		// With value
-		$html = preg_replace('/([\n\r\s]+)@([\w.]+)=(["\'])((?:.(?!["\']?\s+(?:\S+)=|\s*\/?[>"\']))+.)(["\'])/i', '$1x-on:$2=$3$4$5', $html);
-		// Without value
-		$html = preg_replace('/([\n\r\s]+)@([\w.]+)/i', '$1x-on:$2', $html);
+		// Replace Alpine shorthand syntax (@a) with a temp variant (keeping whitespace/br etc and quotes)
+		// With value (@x=y)
+		$html = preg_replace('/([\n\r\s]+)@([\w.]+)=(["\'])((?:.(?!["\']?\s+(?:\S+)=|\s*\/?[>"\']))+.)(["\'])/i', '$1_tmp_x_on:$2=$3$4$5', $html);
+		// Without value (@x)
+		$html = preg_replace('/([\n\r\s]+)@([\w.]+)/i', '$1_tmp_x_on:$2', $html);
+
+		// Replace $ within attributes with temporary variable (e.g. x-intersect.margin.10%.0.30%.0)
+		$html = preg_replace('/([\n\r\s]+)?([\w\-.]+)([%])+/i', '$1$2_tmp_percent', $html);
 
 		// run Iubenda on the provided html
 		$iubenda = new \iubendaParser($html, [
@@ -98,6 +101,10 @@ class Iubenda extends Plugin
 		]);
 
 		$html = $iubenda->parse();
+
+		// Replace temporary variables
+		$html = str_replace("_tmp_x_on:", "@", $html);
+		$html = str_replace("_tmp_percent", "%", $html);
 
 		return $html;
 	}
